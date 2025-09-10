@@ -1,6 +1,6 @@
 
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import PlusIcon from './icons/PlusIcon';
 import DragHandleIcon from './icons/DragHandleIcon';
 
@@ -29,18 +29,6 @@ const TabbedListEditor = <T extends { id?: string }>({
 }: TabbedListEditorProps<T>) => {
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
-  const tabContainerRef = useRef<HTMLDivElement>(null);
-  
-   useEffect(() => {
-    // Scroll selected tab into view
-    if (tabContainerRef.current) {
-      const selectedTab = tabContainerRef.current.children[selectedIndex] as HTMLElement;
-      if (selectedTab) {
-        selectedTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
-  }, [selectedIndex]);
-
 
   const handleAddItem = () => {
     const newList = [...items];
@@ -88,7 +76,7 @@ const TabbedListEditor = <T extends { id?: string }>({
     <div className="bg-white rounded-lg border shadow-sm">
       <div className="border-b flex items-center pr-2">
         <div className="flex-grow overflow-x-auto scrollbar-thin">
-            <div className="flex items-center p-2 space-x-2" ref={tabContainerRef}>
+            <div className="flex items-center p-2 space-x-2">
             {items.map((item, index) => (
                 <button
                     key={item.id || index}
