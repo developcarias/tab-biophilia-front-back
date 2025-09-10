@@ -219,7 +219,6 @@ app.post('/api/contact', async (req: express.Request, res: express.Response) => 
 
 // Keepalive endpoint to prevent the server from sleeping
 app.get('/api/keepalive', (req: express.Request, res: express.Response) => {
-    console.log(`alive`);
     res.status(200).json({ status: 'alive', timestamp: new Date() });
 });
 
