@@ -159,7 +159,35 @@ const AppContent = () => {
   };
   
   if (isLoading) {
-      return <div className="h-screen w-full flex items-center justify-center bg-brand-green-dark text-white text-2xl">Loading Biophilia Institute...</div>
+      return (
+        <div className="h-screen w-full flex flex-col items-center justify-center bg-brand-green-light text-brand-green-dark transition-opacity duration-500 ease-in-out">
+          <style>
+            {`
+              @keyframes pulse-subtle {
+                0%, 100% {
+                  transform: scale(1);
+                  opacity: 0.8;
+                }
+                50% {
+                  transform: scale(1.05);
+                  opacity: 1;
+                }
+              }
+              .animate-pulse-subtle {
+                animation: pulse-subtle 3s ease-in-out infinite;
+              }
+            `}
+          </style>
+          <div className="animate-pulse-subtle">
+            <svg className="w-24 h-24 text-brand-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c.243 0 .487-.01.728-.028M12 3c.243 0 .487.01.728.028m-1.456 18.002c-.16.013-.321.023-.485.023l-.004-.001-.004-.001c-.164 0-.325-.01-.485-.023M12 3a9.004 9.004 0 00-8.716 6.747M12 3a9.004 9.004 0 018.716 6.747m-17.432 0h17.432" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-light tracking-widest mt-4 animate-pulse">
+            BIOPHILIA INSTITUTE
+          </h1>
+        </div>
+      );
   }
   
   // When logged in, render the editable content for a live preview experience.

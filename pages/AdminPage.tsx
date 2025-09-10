@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { PageContent, Project, TeamMember, BlogPost, NavLink, ValueItem, HeroSlide, AlliancePartner, ContentBlockType, ProjectActivity, Statistic, User, SocialLink, LocalizedText } from '../types';
 import { useTranslate, TranslationKey } from '../i18n';
 import { produce } from 'immer';
@@ -194,48 +194,37 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
   const [adminState, setAdminState] = useState(() => {
     try {
       const savedState = sessionStorage.getItem(ADMIN_STATE_KEY);
-      return savedState ? JSON.parse(savedState) : {
-        activeTab: 'global',
-        scrollPos: 0,
-        selectedIndices: {},
-        programAccordionOpen: true,
-      };
+      if (savedState) {
+        const parsed = JSON.parse(savedState);
+        // Only take what we need, provide defaults
+        return {
+          activeTab: parsed.activeTab || 'global',
+          selectedIndices: parsed.selectedIndices || {},
+          programAccordionOpen: typeof parsed.programAccordionOpen === 'boolean' ? parsed.programAccordionOpen : true,
+        };
+      }
     } catch (e) {
-      return {
-        activeTab: 'global',
-        scrollPos: 0,
-        selectedIndices: {},
-        programAccordionOpen: true,
-      };
+      console.error("Failed to parse admin state from session storage:", e);
     }
+    // Default state
+    return {
+      activeTab: 'global',
+      selectedIndices: {},
+      programAccordionOpen: true,
+    };
   });
-
-  const adminContentRef = useRef<HTMLDivElement>(null);
   
-  // Restore scroll position
-  useEffect(() => {
-    if (adminContentRef.current && adminState.scrollPos) {
-        setTimeout(() => window.scrollTo(0, adminState.scrollPos), 0);
-    }
-  }, [adminState.activeTab]); // only run when tab changes
-
   // Save state to session storage
   useEffect(() => {
-    const handleScroll = () => {
-        setAdminState(prevState => ({ ...prevState, scrollPos: window.scrollY }));
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    sessionStorage.setItem(ADMIN_STATE_KEY, JSON.stringify(adminState));
-
-    return () => {
-        window.removeEventListener('scroll', handleScroll);
-    };
+    try {
+        sessionStorage.setItem(ADMIN_STATE_KEY, JSON.stringify(adminState));
+    } catch (e) {
+        console.error("Failed to save admin state to session storage:", e);
+    }
   }, [adminState]);
 
-
   const handleTabChange = (tab: AdminTab) => {
-    setAdminState(prevState => ({ ...prevState, activeTab: tab, scrollPos: 0 }));
+    setAdminState(prevState => ({ ...prevState, activeTab: tab }));
     window.scrollTo(0, 0);
   };
   
@@ -377,7 +366,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
   return (
     <>
       <PageBanner title={t('adminPanelTitle')} imageUrl="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1920&h=1080&fit=crop" />
-      <div className="bg-white py-8" ref={adminContentRef}>
+      <div className="bg-white py-8">
         <div className="container mx-auto px-4 sm-px-6 lg:px-8">
           
           <div className="flex items-center space-x-4 mb-4 sticky top-[9rem] bg-white py-4 z-30 border-b">
