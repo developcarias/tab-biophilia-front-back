@@ -1,5 +1,4 @@
 
-
 import React, { useRef } from 'react';
 import PlusIcon from './icons/PlusIcon';
 import DragHandleIcon from './icons/DragHandleIcon';
@@ -29,9 +28,12 @@ const TabbedListEditor = <T extends { id?: string }>({
 }: TabbedListEditorProps<T>) => {
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
+  
+  // Defensive check to ensure items is always an array
+  const safeItems = Array.isArray(items) ? items : [];
 
   const handleAddItem = () => {
-    const newList = [...items];
+    const newList = [...safeItems];
     const newItem = typeof onAddItemTemplate === 'string' 
       ? onAddItemTemplate 
       : { ...onAddItemTemplate, id: `new_${Date.now()}` };
@@ -42,7 +44,7 @@ const TabbedListEditor = <T extends { id?: string }>({
 
   const handleRemoveCurrentItem = () => {
     if (!window.confirm(`Are you sure you want to remove this ${entityName}?`)) return;
-    const newList = [...items];
+    const newList = [...safeItems];
     newList.splice(selectedIndex, 1);
     onListChange(newList);
     const newIndex = newList.length === 0 ? -1 : Math.min(selectedIndex, newList.length - 1);
@@ -60,7 +62,7 @@ const TabbedListEditor = <T extends { id?: string }>({
 
   const handleDragEnd = () => {
     if (dragItem.current !== null && dragOverItem.current !== null && dragItem.current !== dragOverItem.current) {
-        const newList = [...items];
+        const newList = [...safeItems];
         const [draggedItem] = newList.splice(dragItem.current, 1);
         newList.splice(dragOverItem.current, 0, draggedItem);
         onListChange(newList);
@@ -70,14 +72,14 @@ const TabbedListEditor = <T extends { id?: string }>({
     dragOverItem.current = null;
   };
 
-  const selectedItem = selectedIndex >= 0 && selectedIndex < items.length ? items[selectedIndex] : null;
+  const selectedItem = selectedIndex >= 0 && selectedIndex < safeItems.length ? safeItems[selectedIndex] : null;
 
   return (
     <div className="bg-white rounded-lg border shadow-sm">
       <div className="border-b flex items-center pr-2">
         <div className="flex-grow overflow-x-auto scrollbar-thin">
             <div className="flex items-center p-2 space-x-2">
-            {items.map((item, index) => (
+            {safeItems.map((item, index) => (
                 <button
                     key={item.id || index}
                     onClick={() => onSelectIndex(index)}
@@ -109,7 +111,7 @@ const TabbedListEditor = <T extends { id?: string }>({
       </div>
 
       {selectedItem ? (
-        <div className="p-4">
+        <div className="p-4 relative">
           {renderEditor(selectedItem, selectedIndex, handleRemoveCurrentItem)}
         </div>
       ) : (

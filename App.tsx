@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import { PageContent, User } from './types';
@@ -180,7 +178,7 @@ const AppContent = () => {
           </style>
           <div className="animate-pulse-subtle">
             <svg className="w-24 h-24 text-brand-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c.243 0 .487-.01.728-.028M12 3c.243 0 .487.01.728.028m-1.456 18.002c-.16.013-.321.023-.485.023l-.004-.001-.004-.001c-.164 0-.325-.01-.485-.023M12 3a9.004 9.004 0 00-8.716 6.747M12 3a9.004 9.004 0 018.716 6.747m-17.432 0h17.432" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c.243 0 .487-.01.728-.028M12 3c.243 0 .487.01.728-.028m-1.456 18.002c-.16.013-.321.023-.485.023l-.004-.001-.004-.001c-.164 0-.325-.01-.485-.023M12 3a9.004 9.004 0 00-8.716 6.747M12 3a9.004 9.004 0 018.716 6.747m-17.432 0h17.432" />
             </svg>
           </div>
           <h1 className="text-2xl font-light tracking-widest mt-4 animate-pulse">
@@ -208,7 +206,7 @@ const AppContent = () => {
             onClose={() => setIsMediaLibraryOpen(false)}
         />
       )}
-      <div className="bg-brand-green-light min-h-screen flex flex-col font-sans text-brand-gray">
+      <div className="min-h-screen flex flex-col font-sans text-brand-gray">
         {isLoggedIn && <AdminBar onLogout={handleLogout} />}
         <Header 
           content={contentToRender.global}
@@ -224,7 +222,7 @@ const AppContent = () => {
             <ReactRouterDOM.Route path="/blog" element={<BlogPage content={contentToRender.blogPage} posts={contentToRender.blog} uiText={contentToRender.ui} />} />
             <ReactRouterDOM.Route path="/blog/:slug" element={<BlogPostPage content={contentToRender.blogPage} posts={contentToRender.blog} uiText={contentToRender.ui} />} />
             <ReactRouterDOM.Route path="/contact" element={<ContactPage content={contentToRender.contactPage} globalContent={contentToRender.global} apiUrl={API_URL} />} />
-            <ReactRouterDOM.Route path="/donate" element={<DonatePage content={contentToRender.donatePage} />} />
+            <ReactRouterDOM.Route path="/donate" element={<DonatePage content={contentToRender.donatePage} apiUrl={API_URL} />} />
             <ReactRouterDOM.Route path="/login" element={<LoginPage onLoginSuccess={handleLogin} />} />
             <ReactRouterDOM.Route 
               path="/admin" 

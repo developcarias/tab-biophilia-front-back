@@ -1,6 +1,4 @@
 
-
-
 import { PageContent } from './types';
 
 // This is a placeholder for the initial structure.
@@ -37,6 +35,10 @@ export const INITIAL_CONTENT: PageContent = {
       text: { en: '', es: '' },
       imageUrl: "",
       imageAlt: ""
+    },
+    actionLines: {
+      title: { en: '', es: '' },
+      items: [],
     },
     latestProjects: {
       title: { en: '', es: '' },

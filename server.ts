@@ -1,12 +1,12 @@
-// FIX: Corrected express import to include Request and Response types directly, resolving numerous type errors in route handlers.
-import express, { Request, Response } from 'express';
+// FIX: Replaced aliased imports with default import and namespace access (e.g., express.Request) to resolve type conflicts with global DOM types.
+import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import { GoogleGenAI } from '@google/genai';
 import { config } from './config';
 import { getContent, updateContent, getUserByUsername, getAllUsers, createUser, updateUser, deleteUser } from './services/db';
 import { listFiles, uploadFile, deleteFile, createDirectory, deleteDirectory } from './services/ftp';
-import { sendContactEmail } from './services/email';
+import { sendContactEmail, sendDonationNotificationEmail } from './services/email';
 import { User } from './types';
 import * as ftp from 'basic-ftp';
 
@@ -31,7 +31,7 @@ if (process.env.API_KEY) {
 // --- API ROUTES ---
 
 // Content Management
-app.get('/api/content', async (req: Request, res: Response) => {
+app.get('/api/content', async (req: express.Request, res: express.Response) => {
     try {
         const content = await getContent();
         res.json(content);
@@ -41,7 +41,7 @@ app.get('/api/content', async (req: Request, res: Response) => {
     }
 });
 
-app.put('/api/content', async (req: Request, res: Response) => {
+app.put('/api/content', async (req: express.Request, res: express.Response) => {
     try {
         await updateContent(req.body);
         res.status(200).json({ message: 'Content updated successfully.' });
@@ -52,7 +52,7 @@ app.put('/api/content', async (req: Request, res: Response) => {
 });
 
 // User Authentication & Management
-app.post('/api/login', async (req: Request, res: Response) => {
+app.post('/api/login', async (req: express.Request, res: express.Response) => {
     try {
         const { username, password } = req.body;
         const user = await getUserByUsername(username);
@@ -69,7 +69,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
     }
 });
 
-app.get('/api/users', async (req: Request, res: Response) => {
+app.get('/api/users', async (req: express.Request, res: express.Response) => {
     try {
         const users = await getAllUsers();
         res.json(users);
@@ -79,7 +79,7 @@ app.get('/api/users', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/api/users', async (req: Request, res: Response) => {
+app.post('/api/users', async (req: express.Request, res: express.Response) => {
     try {
         const newUser: Omit<User, 'id'> = req.body;
         const createdUser = await createUser(newUser);
@@ -90,7 +90,7 @@ app.post('/api/users', async (req: Request, res: Response) => {
     }
 });
 
-app.put('/api/users/:id', async (req: Request, res: Response) => {
+app.put('/api/users/:id', async (req: express.Request, res: express.Response) => {
     try {
         const userId = parseInt(req.params.id, 10);
         const userUpdates: Partial<User> = req.body;
@@ -102,7 +102,7 @@ app.put('/api/users/:id', async (req: Request, res: Response) => {
     }
 });
 
-app.delete('/api/users/:id', async (req: Request, res: Response) => {
+app.delete('/api/users/:id', async (req: express.Request, res: express.Response) => {
     try {
         const userId = parseInt(req.params.id, 10);
         // A real app would get current user from a token, but for now we trust the client-side check.
@@ -117,7 +117,7 @@ app.delete('/api/users/:id', async (req: Request, res: Response) => {
 
 
 // Media Library (FTP)
-app.get('/api/media', async (req: Request, res: Response) => {
+app.get('/api/media', async (req: express.Request, res: express.Response) => {
     try {
         const directoryPath = (req.query.path as string) || '/';
         if (directoryPath.includes('..')) {
@@ -135,7 +135,7 @@ app.get('/api/media', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/api/media/folder', async (req: Request, res: Response) => {
+app.post('/api/media/folder', async (req: express.Request, res: express.Response) => {
     const { path } = req.body;
     if (!path || typeof path !== 'string') {
         return res.status(400).json({ message: 'Path is required.' });
@@ -152,7 +152,7 @@ app.post('/api/media/folder', async (req: Request, res: Response) => {
     }
 });
 
-app.delete('/api/media/folder', async (req: Request, res: Response) => {
+app.delete('/api/media/folder', async (req: express.Request, res: express.Response) => {
     try {
         const directoryPath = (req.query.path as string);
         if (!directoryPath || directoryPath === '/') {
@@ -169,8 +169,10 @@ app.delete('/api/media/folder', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/api/media/upload', upload.single('file'), async (req: Request, res: Response) => {
-    const file = req.file;
+app.post('/api/media/upload', upload.single('file'), async (req: express.Request, res: express.Response) => {
+    // The `file` property is added by multer. We cast to `any` for simplicity
+    // or you could extend the Express.Request type.
+    const file = (req as any).file;
     const path = (req.body.path as string) || '/';
     if (!file) {
         return res.status(400).json({ message: 'No file uploaded.' });
@@ -187,7 +189,7 @@ app.post('/api/media/upload', upload.single('file'), async (req: Request, res: R
     }
 });
 
-app.delete('/api/media/:filename', async (req: Request, res: Response) => {
+app.delete('/api/media/:filename', async (req: express.Request, res: express.Response) => {
     try {
         const path = (req.query.path as string) || '/';
         if (path.includes('..')) {
@@ -203,7 +205,7 @@ app.delete('/api/media/:filename', async (req: Request, res: Response) => {
 
 
 // Contact Form (SMTP)
-app.post('/api/contact', async (req: Request, res: Response) => {
+app.post('/api/contact', async (req: express.Request, res: express.Response) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message) {
         return res.status(400).json({ message: 'All fields are required.' });
@@ -217,13 +219,29 @@ app.post('/api/contact', async (req: Request, res: Response) => {
     }
 });
 
+// Donation Notification
+app.post('/api/donate', async (req: express.Request, res: express.Response) => {
+    const { firstName, lastName, emailAddress, amount } = req.body;
+    if (!firstName || !lastName || !emailAddress || amount === undefined) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+    try {
+        await sendDonationNotificationEmail(firstName, lastName, emailAddress, amount);
+        res.status(200).json({ message: 'Donation notification sent successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to send donation notification.' });
+    }
+});
+
+
 // Keepalive endpoint to prevent the server from sleeping
-app.get('/api/keepalive', (req: Request, res: Response) => {
+app.get('/api/keepalive', (req: express.Request, res: express.Response) => {
     res.status(200).json({ status: 'alive', timestamp: new Date() });
 });
 
 // Gemini AI Text Generation
-app.post('/api/generate-text', async (req: Request, res: Response) => {
+app.post('/api/generate-text', async (req: express.Request, res: express.Response) => {
     if (!ai) {
         return res.status(503).json({ message: "AI service is not configured on the server." });
     }
@@ -236,7 +254,6 @@ app.post('/api/generate-text', async (req: Request, res: Response) => {
     const languageName = language === 'es' ? 'Spanish' : 'English';
     
     try {
-// FIX: Updated model from deprecated 'gemini-1.5-flash' to 'gemini-2.5-flash'.
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,

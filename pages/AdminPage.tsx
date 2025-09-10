@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { PageContent, Project, TeamMember, BlogPost, NavLink, ValueItem, HeroSlide, AlliancePartner, ContentBlockType, ProjectActivity, Statistic, User, SocialLink, LocalizedText } from '../types';
 import { useTranslate, TranslationKey } from '../i18n';
@@ -18,6 +17,7 @@ interface AdminPageProps {
 
 type AdminTab = 'global' | 'home' | 'about' | 'projects' | 'team' | 'blog' | 'contact' | 'donate' | 'users';
 const ADMIN_STATE_KEY = 'biophilia_admin_state';
+const ADMIN_SCROLL_POSITIONS_KEY = 'biophilia_admin_scroll_positions';
 
 
 // User Management Component
@@ -222,8 +222,33 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
         console.error("Failed to save admin state to session storage:", e);
     }
   }, [adminState]);
+  
+  // Effect to restore scroll position on tab change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const scrollPositions = JSON.parse(sessionStorage.getItem(ADMIN_SCROLL_POSITIONS_KEY) || '{}');
+        const savedPosition = scrollPositions[adminState.activeTab];
+        if (typeof savedPosition === 'number') {
+          window.scrollTo(0, savedPosition);
+        }
+      } catch (e) {
+        console.error("Could not restore scroll position:", e);
+      }
+    }, 100); // A small delay to allow DOM to render
+
+    return () => clearTimeout(timer);
+  }, [adminState.activeTab]);
 
   const handleTabChange = (tab: AdminTab) => {
+    // Save current scroll position before changing tab
+    try {
+        const scrollPositions = JSON.parse(sessionStorage.getItem(ADMIN_SCROLL_POSITIONS_KEY) || '{}');
+        scrollPositions[adminState.activeTab] = window.scrollY;
+        sessionStorage.setItem(ADMIN_SCROLL_POSITIONS_KEY, JSON.stringify(scrollPositions));
+    } catch (e) {
+        console.error("Could not save scroll position:", e);
+    }
     setAdminState(prevState => ({ ...prevState, activeTab: tab }));
   };
   
@@ -470,6 +495,7 @@ const HomeTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex}: {da
     const { renderLocalizedTextField, renderImageField, renderTextField, t } = handlers;
 
     const newHeroSlideTemplate: Omit<HeroSlide, 'id'> = { title: { en: '', es: '' }, subtitle: { en: '', es: '' }, imageUrl: '', projectId: '', activityId: '' };
+    const newActionLineTemplate: Omit<ValueItem, 'id'> = { title: { en: '', es: '' }, slogan: { en: '', es: '' }, text: { en: '', es: '' }, icon: 'LeafIcon', imageUrl: '' };
     const newStatTemplate: Omit<Statistic, 'id'> = { iconUrl: 'https://img.icons8.com/ios-glyphs/90/ffffff/deciduous-tree.png', value: '0', label: { en: '', es: '' }, backgroundImages: [] };
     const newAlliancePartnerTemplate: Omit<AlliancePartner, 'id'> = { name: '', logoUrl: '' };
     
@@ -503,6 +529,28 @@ const HomeTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex}: {da
             {renderLocalizedTextField('Text', 'homePage.welcome.text', data.welcome?.text, true)}
             {renderImageField('Image URL', 'homePage.welcome.imageUrl', data.welcome?.imageUrl)}
             {renderTextField('Image Alt Text', 'homePage.welcome.imageAlt', data.welcome?.imageAlt)}
+        </AdminSection>
+        <AdminSection titleKey="sectionActionLines">
+            {renderLocalizedTextField('Section Title', 'homePage.actionLines.title', data.actionLines?.title)}
+            <TabbedListEditor<ValueItem>
+                items={data.actionLines?.items || []}
+                onListChange={(newList) => onUpdate('homePage.actionLines.items', newList)}
+                getItemTitle={(item, index) => item.title?.en || `Focus Area ${index + 1}`}
+                onAddItemTemplate={newActionLineTemplate}
+                entityName="Focus Area"
+                selectedIndex={selectedIndices['home.actionLines'] || 0}
+                onSelectIndex={(i) => onSelectIndex('home.actionLines', i)}
+                renderEditor={(item, index, onRemove) => (
+                    <>
+                        <button onClick={onRemove} className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 text-sm rounded"> Remove </button>
+                        {renderLocalizedTextField('Title', `homePage.actionLines.items.${index}.title`, item.title)}
+                        {renderLocalizedTextField('Slogan', `homePage.actionLines.items.${index}.slogan`, item.slogan || {en:'', es:''})}
+                        {renderLocalizedTextField('Text', `homePage.actionLines.items.${index}.text`, item.text, true)}
+                        {renderTextField('Icon Name', `homePage.actionLines.items.${index}.icon`, item.icon || '')}
+                        {renderImageField('Image URL', `homePage.actionLines.items.${index}.imageUrl`, item.imageUrl || '')}
+                    </>
+                )}
+            />
         </AdminSection>
          <AdminSection titleKey="sectionLatestProjects">
             {renderLocalizedTextField('Title', 'homePage.latestProjects.title', data.latestProjects?.title)}
