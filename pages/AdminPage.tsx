@@ -225,7 +225,6 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
 
   const handleTabChange = (tab: AdminTab) => {
     setAdminState(prevState => ({ ...prevState, activeTab: tab }));
-    window.scrollTo(0, 0);
   };
   
   const handleSelectedIndexChange = (key: string, index: number) => {
