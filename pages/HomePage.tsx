@@ -7,6 +7,8 @@ import LatestProjects from '../components/LatestProjects';
 import { useI18n } from '../i18n';
 import Editable from '../components/Editable';
 import ActionLineCard from '../components/ActionLineCard';
+import ChevronLeftIcon from '../components/icons/ChevronLeftIcon';
+import ChevronRightIcon from '../components/icons/ChevronRightIcon';
 
 interface HomePageProps {
   content: HomePageContent;
@@ -35,7 +37,7 @@ const StatCard: React.FC<{stat: Statistic, basePath: string}> = ({ stat, basePat
 
   if (hasBackground) {
     return (
-      <div className="relative p-6 rounded-lg shadow-lg text-center border-t-4 border-brand-accent overflow-hidden text-white min-h-[200px] flex flex-col justify-center">
+      <div className="relative p-8 rounded-lg shadow-lg text-center border-t-4 border-brand-accent overflow-hidden text-white min-h-[280px] flex flex-col justify-center">
         {stat.backgroundImages?.map((image, imgIndex) => (
           <img
             key={image}
@@ -48,9 +50,9 @@ const StatCard: React.FC<{stat: Statistic, basePath: string}> = ({ stat, basePat
         
         <div className="relative z-10">
           {stat.iconUrl && <img src={stat.iconUrl} alt="" className="h-12 w-12 mx-auto mb-4 filter brightness-0 invert" />}
-          <div className="text-5xl font-bold">{stat.value}</div>
+          <div className="text-6xl font-bold">{stat.value}</div>
           <Editable localizedText={stat.label} basePath={`${basePath}.label`}>
-            <div className="text-lg mt-2">{stat.label[language]}</div>
+            <div className="text-xl mt-2">{stat.label[language]}</div>
           </Editable>
         </div>
       </div>
@@ -59,11 +61,11 @@ const StatCard: React.FC<{stat: Statistic, basePath: string}> = ({ stat, basePat
 
   // Fallback for stats without background images
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg text-center border-t-4 border-brand-accent min-h-[200px] flex flex-col justify-center">
+    <div className="bg-white p-8 rounded-lg shadow-lg text-center border-t-4 border-brand-accent min-h-[280px] flex flex-col justify-center">
       {stat.iconUrl && <img src={stat.iconUrl} alt="" className="h-12 w-12 text-brand-accent mx-auto mb-4" />}
-      <div className="text-5xl font-bold text-brand-green-dark">{stat.value}</div>
+      <div className="text-6xl font-bold text-brand-green-dark">{stat.value}</div>
       <Editable localizedText={stat.label} basePath={`${basePath}.label`}>
-        <div className="text-lg text-brand-gray mt-2">{stat.label[language]}</div>
+        <div className="text-xl text-brand-gray mt-2">{stat.label[language]}</div>
       </Editable>
     </div>
   );
@@ -71,8 +73,18 @@ const StatCard: React.FC<{stat: Statistic, basePath: string}> = ({ stat, basePat
 
 const OurNumbersSection: React.FC<OurNumbersSectionProps> = ({ content, basePath }) => {
   const { language } = useI18n();
+  const [mobileCurrentIndex, setMobileCurrentIndex] = useState(0);
   
-  if (!content.stats) return null;
+  if (!content.stats || content.stats.length === 0) return null;
+
+  const handlePrev = () => {
+    setMobileCurrentIndex(prev => (prev === 0 ? content.stats.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setMobileCurrentIndex(prev => (prev === content.stats.length - 1 ? 0 : prev + 1));
+  };
+
 
   return (
     <div className="bg-brand-green-light py-16 lg:py-24">
@@ -82,10 +94,44 @@ const OurNumbersSection: React.FC<OurNumbersSectionProps> = ({ content, basePath
             <h2 className="text-4xl font-extrabold text-brand-green-dark mb-12">{content.title[language]}</h2>
           </Editable>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-3 gap-8">
           {content.stats.map((stat, index) => (
             <StatCard key={stat.id} stat={stat} basePath={`${basePath}.stats.${index}`} />
           ))}
+        </div>
+
+        {/* Mobile Carousel */}
+        <div className="md:hidden relative">
+          <div className="overflow-hidden">
+            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${mobileCurrentIndex * 100}%)` }}>
+              {content.stats.map((stat, index) => (
+                <div key={stat.id} className="w-full flex-shrink-0 px-2">
+                  <StatCard stat={stat} basePath={`${basePath}.stats.${index}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {content.stats.length > 1 && (
+            <>
+              <button
+                onClick={handlePrev}
+                className="absolute top-1/2 -left-2 transform -translate-y-1/2 z-10 p-2 bg-white/50 rounded-full text-brand-green-dark shadow-md hover:bg-white"
+                aria-label="Previous stat"
+              >
+                <ChevronLeftIcon className="h-6 w-6" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="absolute top-1/2 -right-2 transform -translate-y-1/2 z-10 p-2 bg-white/50 rounded-full text-brand-green-dark shadow-md hover:bg-white"
+                aria-label="Next stat"
+              >
+                <ChevronRightIcon className="h-6 w-6" />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

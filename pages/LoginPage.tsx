@@ -13,7 +13,7 @@ interface LoginPageProps {
 // Dynamically set API_URL based on hostname
 const API_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:3001' 
-  : 'https://biophilia-front-back.onrender.com';
+  : 'https://tab-biophilia-front-back.onrender.com';
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');

@@ -37,7 +37,7 @@ const AppContent = () => {
   // Dynamically set API_URL based on hostname
   const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3001' 
-    : 'https://biophilia-front-back.onrender.com';
+    : 'https://tab-biophilia-front-back.onrender.com';
 
   useEffect(() => {
     // Ping the keepalive endpoint every 14 minutes to prevent the backend from sleeping

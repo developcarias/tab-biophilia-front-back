@@ -3,7 +3,7 @@
 // Dynamically set API_URL based on hostname
 const API_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:3001' 
-  : 'https://biophilia-front-back.onrender.com';
+  : 'https://tab-biophilia-front-back.onrender.com';
 
 export const generateText = async (prompt: string, language: 'en' | 'es'): Promise<string> => {
   try {
