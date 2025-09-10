@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useRef } from 'react';
 // FIX: Imported LocalizedText type to resolve 'Cannot find name' error.
 import { HomePageContent, ValueItem, AlliancePartner, Project, UIText, OurNumbersSection as OurNumbersSectionType, LocalizedText, Statistic } from '../types';
@@ -76,9 +77,12 @@ const OurNumbersSection: React.FC<OurNumbersSectionProps> = ({ content, basePath
   return (
     <div className="bg-brand-green-light py-16 lg:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
+        <div className="text-center max-w-3xl mx-auto">
           <Editable localizedText={content.title} basePath={`${basePath}.title`}>
-            <h2 className="text-4xl font-extrabold text-brand-green-dark mb-12">{content.title?.[language]}</h2>
+            <h2 className="text-4xl font-extrabold text-brand-green-dark mb-4">{content.title?.[language]}</h2>
+          </Editable>
+          <Editable localizedText={content.description || {en:'', es:''}} basePath={`${basePath}.description`} multiline>
+            <p className="mt-4 text-lg text-brand-gray mb-12">{content.description?.[language]}</p>
           </Editable>
         </div>
         <div className="relative">

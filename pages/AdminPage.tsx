@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { PageContent, Project, TeamMember, BlogPost, NavLink, ValueItem, HeroSlide, AlliancePartner, ContentBlockType, ProjectActivity, Statistic, User, SocialLink, LocalizedText } from '../types';
 import { useTranslate, TranslationKey } from '../i18n';
@@ -242,7 +243,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
     setAdminState(prevState => {
         const newIndices = { ...prevState.selectedIndices, [key]: index };
         // If we are changing a program, reset its activity index
-        if (key === 'projects.list') {
+        if (key === 'projects.list' && prevState.selectedIndices[key] !== index) {
             delete newIndices[`projects.${prevState.selectedIndices[key]}.activities`];
         }
         return { ...prevState, selectedIndices: newIndices };
@@ -527,6 +528,7 @@ const HomeTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex}: {da
         </AdminSection>
         <AdminSection titleKey="sectionOurNumbers">
           {renderLocalizedTextField('Section Title', 'homePage.ourNumbers.title', data.ourNumbers?.title)}
+          {renderLocalizedTextField('Description', 'homePage.ourNumbers.description', data.ourNumbers?.description, true)}
           <TabbedListEditor<Statistic>
             items={data.ourNumbers?.stats || []}
             onListChange={(newList) => onUpdate('homePage.ourNumbers.stats', newList)}
@@ -668,7 +670,7 @@ const AboutTab = ({data, handlers, onUpdate, selectedIndex, onSelectIndex}: {dat
 };
 
 const ProjectsTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex, isAccordionOpen, onAccordionToggle}: {data: PageContent, handlers: any, onUpdate: (path: string, value: any) => void, selectedIndices: any, onSelectIndex: (key: string, index: number) => void, isAccordionOpen: boolean, onAccordionToggle: () => void}) => {
-    const { t, renderLocalizedTextField, renderImageField, renderTextField } = handlers;
+    const { t, renderLocalizedTextField, renderImageField, renderTextField, handleFieldChange } = handlers;
     const newProjectTemplate: Omit<Project, 'id'> = { title: { en: '', es: '' }, description: { en: '', es: '' }, detailDescription: { en: '', es: '' }, imageUrl: '', imageAlt: '', detailImageUrl: '', display_order: 0, activities: [] };
     const newActivityTemplate: Omit<ProjectActivity, 'id'> = { date: new Date().toISOString().split('T')[0], title: { en: '', es: '' }, description: { en: '', es: '' }, imageUrl: '', display_order: 0 };
     
@@ -696,11 +698,13 @@ const ProjectsTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex, 
                 renderEditor={(project, projIndex, onRemove) => (
                     <>
                         <div className="flex justify-between items-center border-b mb-4 pb-2 -mt-2">
-                             <button onClick={onAccordionToggle} className="flex items-center font-semibold text-gray-700 hover:text-brand-green-dark p-2 -ml-2">
-                                <span>Program Details</span>
-                                <ChevronDownIcon className={`w-5 h-5 ml-2 transition-transform ${isAccordionOpen ? 'rotate-180' : ''}`} />
-                            </button>
-                            <button onClick={onRemove} className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 text-sm rounded"> Remove </button>
+                            <span className="font-semibold text-gray-700">Program Details</span>
+                            <div className="flex items-center space-x-2">
+                                <button onClick={onAccordionToggle} className="p-1 text-gray-500 hover:text-brand-green-dark" aria-label={isAccordionOpen ? 'Collapse Details' : 'Expand Details'}>
+                                    <ChevronDownIcon className={`w-5 h-5 transition-transform ${isAccordionOpen ? 'rotate-180' : ''}`} />
+                                </button>
+                                <button onClick={onRemove} className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 text-sm rounded">Remove</button>
+                            </div>
                         </div>
 
                         <div className={`accordion-content ${isAccordionOpen ? 'open' : ''}`}>
@@ -729,7 +733,13 @@ const ProjectsTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex, 
                                     <>
                                         <div className="flex items-end space-x-4 mb-4">
                                             <div className="flex-grow">
-                                                {renderTextField('Date', `projects.${projIndex}.activities.${actIndex}.date`, activity.date ? activity.date.split('T')[0] : '', false, 'date')}
+                                                <label className="block text-brand-gray text-sm font-bold mb-2">{t('date')}</label>
+                                                <input
+                                                    type="date"
+                                                    value={activity.date ? activity.date.split('T')[0] : ''}
+                                                    onChange={(e) => handleFieldChange(`projects.${projIndex}.activities.${actIndex}.date`, e.target.value)}
+                                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-brand-gray leading-tight focus:outline-none focus:shadow-outline bg-white"
+                                                />
                                             </div>
                                             <button onClick={onRemoveActivity} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 text-sm rounded flex-shrink-0">Remove</button>
                                         </div>

@@ -50,6 +50,7 @@ export const INITIAL_CONTENT: PageContent = {
     },
     ourNumbers: {
       title: { en: '', es: '' },
+      description: { en: '', es: '' },
       stats: [],
     },
     alliances: {

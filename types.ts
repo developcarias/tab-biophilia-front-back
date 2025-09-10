@@ -133,6 +133,7 @@ export interface Statistic {
 
 export interface OurNumbersSection {
   title: LocalizedText;
+  description?: LocalizedText;
   stats: Statistic[];
 }
 

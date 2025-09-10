@@ -42,6 +42,26 @@ const AppContent = () => {
     : 'https://biophilia-front-back.onrender.com';
 
   useEffect(() => {
+    // Ping the keepalive endpoint every 14 minutes to prevent the backend from sleeping
+    const keepaliveInterval = setInterval(() => {
+      fetch(`${API_URL}/api/keepalive`)
+        .then(res => {
+          if (res.ok) {
+            console.log('Keepalive ping successful');
+          } else {
+            console.warn('Keepalive ping failed.');
+          }
+        })
+        .catch(err => {
+          console.error('Error sending keepalive ping:', err);
+        });
+    }, 14 * 60 * 1000); // 14 minutes
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(keepaliveInterval);
+  }, [API_URL]);
+
+  useEffect(() => {
     // Check for saved login state
     try {
       const savedUser = localStorage.getItem('biophilia-admin-user');

@@ -1,5 +1,6 @@
 
 
+
 import React from 'react';
 import { AboutPageContent, ValueItem, ContentBlockType } from '../types';
 import ContentBlock from '../components/ContentBlock';
@@ -36,7 +37,7 @@ const ValueCard: React.FC<{item: ValueItem, basePath: string}> = ({ item, basePa
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center h-full">
       {item.imageUrl ? (
-        <div className="w-32 h-32 rounded-full mb-6 shadow-md border-4 border-white flex items-center justify-center bg-gray-100 overflow-hidden">
+        <div className="w-28 h-28 mb-6 flex items-center justify-center">
           <EditableImage
             src={item.imageUrl}
             alt={item.title?.[language] || 'Value Image'}
@@ -97,7 +98,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ content }) => {
       
       {/* Our Story Section */}
       {content.history && (
-        <div className="bg-white py-8 lg:py-12">
+        <div className="bg-white py-12 lg:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div className="prose lg:prose-lg max-w-none text-brand-gray">
@@ -118,7 +119,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ content }) => {
       
       {/* Mission & Vision Section */}
       {(content.mission || content.vision) && (
-        <div className="bg-brand-green-light py-16 lg:py-24">
+        <div className="bg-brand-green-light py-12 lg:py-16">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     {content.mission && <MissionVisionCard content={content.mission} basePath="aboutPage.mission" />}
@@ -130,7 +131,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ content }) => {
 
       {/* Our Work Section */}
       {content.work && (
-        <div className="bg-white">
+        <div className="bg-white py-12 lg:py-16">
           <ContentBlock 
             title={content.work.title}
             text={content.work.text}
@@ -145,7 +146,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ content }) => {
 
       {/* Values Section */}
       {content.values?.items && content.values.items.length > 0 && (
-        <div className="bg-brand-green-light py-16 lg:py-24">
+        <div className="bg-brand-green-light py-12 lg:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <Editable localizedText={content.values.title} basePath="aboutPage.values.title">

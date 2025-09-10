@@ -217,6 +217,11 @@ app.post('/api/contact', async (req: Request, res: Response) => {
     }
 });
 
+// Keepalive endpoint to prevent the server from sleeping
+app.get('/api/keepalive', (req: Request, res: Response) => {
+    res.status(200).json({ status: 'alive', timestamp: new Date() });
+});
+
 // Gemini AI Text Generation
 app.post('/api/generate-text', async (req: Request, res: Response) => {
     if (!ai) {

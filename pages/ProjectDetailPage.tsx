@@ -1,5 +1,6 @@
 
 
+
 import React, { useEffect, useRef } from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import { Project, ProjectDetailPageContent } from '../types';
@@ -60,8 +61,11 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projects, content
       <div className="bg-white py-8 lg:py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center mb-16">
+              <Editable localizedText={project.description || {en:'',es:''}} basePath={`${basePath}.description`} multiline>
+                  <p className="text-xl text-brand-gray whitespace-pre-line mb-4">{project.description?.[language]}</p>
+              </Editable>
               <Editable localizedText={project.detailDescription || {en:'',es:''}} basePath={`${basePath}.detailDescription`} multiline>
-                  <p className="text-xl text-brand-gray whitespace-pre-line">{project.detailDescription?.[language]}</p>
+                  <p className="text-xl text-brand-gray whitespace-pre-line italic">{project.detailDescription?.[language]}</p>
               </Editable>
             </div>
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
