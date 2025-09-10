@@ -2,7 +2,13 @@ import mysql from 'mysql2/promise';
 import { config } from '../config';
 import { PageContent, User, Project, TeamMember, BlogPost, ProjectActivity } from '../types';
 
-const pool = mysql.createPool(config.db);
+const pool = mysql.createPool({
+    ...config.db,
+    waitForConnections: true,
+    connectionLimit: 2, // Optimized for free tier resources
+    queueLimit: 0, // Fail fast if connections are busy
+    connectTimeout: 30000 // 30 seconds
+});
 
 // Helper to parse JSON fields from a database row or array of rows
 const parseJsonFields = (data: any, fields: string[]): any => {
