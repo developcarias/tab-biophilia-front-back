@@ -40,7 +40,7 @@ const LatestProjects: React.FC<LatestProjectsProps> = ({ title, slogan, subtitle
                 </ReactRouterDOM.NavLink>
               </div>
               <div className="p-6 pt-4 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold text-brand-green-dark mb-2 h-14 overflow-hidden">
+                <h3 className="text-xl font-bold text-brand-green-dark mb-2 h-8 overflow-hidden">
                    <ReactRouterDOM.NavLink to={`/projects/${project.id}`} className="hover:text-brand-accent transition-colors">
                     {project.title[language]}
                    </ReactRouterDOM.NavLink>
