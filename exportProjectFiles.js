@@ -1,14 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const PROJECT_DIR = __dirname; // Cambia si quieres otra carpeta raíz
+const PROJECT_DIR = __dirname;
 const OUTPUT_FILE = path.join(PROJECT_DIR, 'project_files.txt');
-const EXCLUDE_DIRS = ['node_modules', '.git', 'dist', 'build'];
+const EXCLUDE_DIRS = ['node_modules', '.git', 'dist', 'build', '.vscode'];
+const EXCLUDE_FILES = ['package-lock.json'];
 const INCLUDE_EXTS = ['.ts', '.tsx', '.js', '.jsx', '.css', '.json', '.html', '.md'];
 
 function shouldInclude(filePath) {
   const ext = path.extname(filePath).toLowerCase();
-  return INCLUDE_EXTS.includes(ext);
+  const base = path.basename(filePath);
+  return INCLUDE_EXTS.includes(ext) && !EXCLUDE_FILES.includes(base);
 }
 
 function walk(dir, fileList = []) {
