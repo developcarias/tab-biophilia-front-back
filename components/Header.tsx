@@ -73,41 +73,47 @@ const Header: React.FC<HeaderProps> = ({ content, uiText }) => {
   );
 
   const renderMobileMenu = () => (
-    <div className="fixed inset-0 z-50 bg-brand-accent text-white lg:hidden overflow-y-auto">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-28">
-          <ReactRouterDOM.NavLink to="/" onClick={closeMenu} className="flex items-center space-x-3 text-white">
-            <img src={content.logoUrl} alt="Biophilia Institute Logo" className="w-auto h-20" />
-          </ReactRouterDOM.NavLink>
-          <button onClick={closeMenu} className="text-white p-2" aria-label="Close menu">
-            <CloseIcon />
-          </button>
-        </div>
-      </div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col justify-between pb-24">
-          <nav className="flex flex-col space-y-4 pt-10">
-            {content.navigation.map(link => (
-              <ReactRouterDOM.NavLink key={link.id} to={link.to} onClick={closeMenu} className="text-2xl font-bold py-2 hover:text-brand-yellow transition-colors text-center" end={link.end}>{link.label[language]}</ReactRouterDOM.NavLink>
-            ))}
-          </nav>
-          <div className="space-y-6 mt-12">
-            <div className="flex items-center justify-between">
-              <span className="text-lg">Language / Idioma</span>
-              <button onClick={toggleLanguage} className="border-2 border-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label={`Change language to ${language === 'en' ? 'Español' : 'English'}`}>
-                {language === 'en' 
-                  ? <UsaFlagIcon className="w-full h-full rounded-full" /> 
-                  : <SpainFlagIcon className="w-full h-full rounded-full" />
-                }
-              </button>
-            </div>
-            <ReactRouterDOM.NavLink to="/donate" onClick={closeMenu} className="block w-full">
-              <button className="w-full bg-brand-yellow text-brand-green-dark px-4 py-3 rounded-md text-lg font-bold hover:opacity-90 transition-opacity">
-                {uiText.donateNow[language]}
-              </button>
+    <div className="fixed inset-0 z-50 text-white lg:hidden">
+      <div className="absolute inset-0 bg-[url('https://biophiliaweb.org/images/parallax/1.jpg')] bg-cover bg-center bg-no-repeat"></div>
+      
+      <div className="absolute inset-0 bg-brand-accent/40 backdrop-blur-md"></div>
+
+      <div className="relative z-10 h-full overflow-y-auto"> 
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-28">
+            <ReactRouterDOM.NavLink to="/" onClick={closeMenu} className="flex items-center space-x-3 text-white">
+              <img src={content.logoUrl} alt="Biophilia Institute Logo" className="w-auto h-20" />
             </ReactRouterDOM.NavLink>
-            <div className="flex justify-center space-x-6">
-              {renderSocialIcons("h-6 w-6")}
+            <button onClick={closeMenu} className="text-white p-2" aria-label="Close menu">
+              <CloseIcon />
+            </button>
+          </div>
+        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col justify-between pb-24 max-h-[635px]">
+            <nav className="flex flex-col space-y-4 pt-0">
+              {content.navigation.map(link => (
+                <ReactRouterDOM.NavLink key={link.id} to={link.to} onClick={closeMenu} className="text-2xl font-bold py-2 hover:text-brand-yellow transition-colors text-center" end={link.end}>{link.label[language]}</ReactRouterDOM.NavLink>
+              ))}
+            </nav>
+            <div className="space-y-6 mt-12">
+              <div className="flex items-center justify-between">
+                <span className="text-lg">Language / Idioma</span>
+                <button onClick={toggleLanguage} className="border-2 border-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label={`Change language to ${language === 'en' ? 'Español' : 'English'}`}>
+                  {language === 'en' 
+                    ? <UsaFlagIcon className="w-full h-full rounded-full" /> 
+                    : <SpainFlagIcon className="w-full h-full rounded-full" />
+                  }
+                </button>
+              </div>
+              <ReactRouterDOM.NavLink to="/donate" onClick={closeMenu} className="block w-full">
+                <button className="w-full bg-brand-yellow text-brand-green-dark px-4 py-3 rounded-md text-lg font-bold hover:opacity-90 transition-opacity">
+                  {uiText.donateNow[language]}
+                </button>
+              </ReactRouterDOM.NavLink>
+              <div className="flex justify-center space-x-6">
+                {renderSocialIcons("h-6 w-6")}
+              </div>
             </div>
           </div>
         </div>
