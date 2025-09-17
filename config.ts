@@ -13,7 +13,7 @@ export const config = {
     host: 'biophiliaweb.org',
     port: 21,
     user: 'bioftp@biophiliaweb.org',
-    password: 'O7MdHYM$e]rr',
+    password: 'xc)RJ#)GDmos',
     secure: false,
     basePath: '/images' // Assuming images are in a subdirectory
   },
