@@ -319,12 +319,12 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
   };
 
   const renderTextField = useCallback((labelKey: TranslationKey | string, path: string, value: string, isTextarea: boolean = false, type: string = 'text') => {
-    const label = t(labelKey as TranslationKey, {});
-    const displayLabel = label === labelKey ? labelKey : label;
+    // const label = t(labelKey as TranslationKey, {});
+    // const displayLabel = label === labelKey ? labelKey : label;
     const InputComponent = isTextarea ? 'textarea' : 'input';
     return (
       <div className="mb-4">
-        <label className="block text-brand-gray text-sm font-bold mb-2">{displayLabel}</label>
+        <label className="block text-brand-gray text-sm font-bold mb-2">{labelKey}</label>
         <InputComponent
           type={type}
           value={value || ''}
@@ -779,6 +779,7 @@ const ProjectsTab = ({data, handlers, onUpdate, selectedIndices, onSelectIndex, 
                                             </div>
                                             <button onClick={onRemoveActivity} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 text-sm rounded flex-shrink-0">Remove</button>
                                         </div>
+                                        {renderTextField('ID (must be unique)', `projects.${projIndex}.activities.${actIndex}.id`, activity.id)}
                                         {renderLocalizedTextField('Title', `projects.${projIndex}.activities.${actIndex}.title`, activity.title)}
                                         {renderLocalizedTextField('Description', `projects.${projIndex}.activities.${actIndex}.description`, activity.description, true)}
                                         {renderImageField('Image URL', `projects.${projIndex}.activities.${actIndex}.imageUrl`, activity.imageUrl)}
