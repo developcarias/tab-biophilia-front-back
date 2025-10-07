@@ -319,8 +319,6 @@ const AdminPage: React.FC<AdminPageProps> = ({ content, onUpdateContent, onDisca
   };
 
   const renderTextField = useCallback((labelKey: TranslationKey | string, path: string, value: string, isTextarea: boolean = false, type: string = 'text') => {
-    // const label = t(labelKey as TranslationKey, {});
-    // const displayLabel = label === labelKey ? labelKey : label;
     const InputComponent = isTextarea ? 'textarea' : 'input';
     return (
       <div className="mb-4">

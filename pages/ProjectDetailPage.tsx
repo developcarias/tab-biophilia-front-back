@@ -1,6 +1,5 @@
 
 
-
 import React, { useEffect, useRef } from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import { Project, ProjectDetailPageContent } from '../types';

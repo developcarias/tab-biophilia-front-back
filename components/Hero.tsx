@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '../i18n';
 import { HeroSlide, UIText } from '../types';

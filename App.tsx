@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
+// FIX: Changed to namespace import to resolve module resolution issues with react-router-dom.
 import * as ReactRouterDOM from 'react-router-dom';
 import { PageContent, User } from './types';
 import { INITIAL_CONTENT } from './constants';

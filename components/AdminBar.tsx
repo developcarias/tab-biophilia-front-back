@@ -1,6 +1,6 @@
+
 import React from 'react';
 import { useTranslate } from '../i18n';
-// FIX: Changed to namespace import to resolve module resolution issues with react-router-dom.
 import * as ReactRouterDOM from 'react-router-dom';
 
 interface AdminBarProps {
