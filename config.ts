@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -25,6 +24,10 @@ export const config = {
       user: 'admin@biophiliaweb.org',
       pass: 'Svs..6242'
     }
+  },
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY || '',
+    publishableKey: process.env.VITE_STRIPE_PUBLISHABLE_KEY || ''
   },
   server: {
     port: process.env.PORT || 3001,
