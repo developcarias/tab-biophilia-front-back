@@ -55,7 +55,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSuccess, onError }) => {
 
     return (
         <form id="payment-form" onSubmit={handleSubmit}>
-            <PaymentElement id="payment-element" options={paymentElementOptions} />
+            <div className="border p-4 rounded-md bg-gray-50">
+              <PaymentElement id="payment-element" options={paymentElementOptions} />
+            </div>
             <button disabled={isProcessing || !stripe || !elements} id="submit" className="w-full bg-brand-accent text-white font-bold text-xl py-4 rounded-lg hover:bg-brand-accent/90 transition-transform transform hover:scale-105 shadow-lg disabled:bg-gray-400 mt-8">
                 <span id="button-text">
                     {isProcessing ? "Processing..." : "Pay now"}

@@ -26,8 +26,8 @@ export const config = {
     }
   },
   stripe: {
-    secretKey: process.env.STRIPE_SECRET_KEY || '',
-    publishableKey: process.env.VITE_STRIPE_PUBLISHABLE_KEY || ''
+    secretKey: process.env.STRIPE_SECRET_KEY,
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
   },
   server: {
     port: process.env.PORT || 3001,

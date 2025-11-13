@@ -34,7 +34,8 @@ if (process.env.API_KEY) {
 // --- API ROUTES ---
 
 // Content Management
-app.get('/api/content', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.get('/api/content', async (req: express.Request, res: express.Response) => {
     try {
         const content = await getContent();
         res.json(content);
@@ -44,7 +45,8 @@ app.get('/api/content', async (req, res) => {
     }
 });
 
-app.put('/api/content', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.put('/api/content', async (req: express.Request, res: express.Response) => {
     try {
         await updateContent(req.body);
         res.status(200).json({ message: 'Content updated successfully.' });
@@ -55,7 +57,8 @@ app.put('/api/content', async (req, res) => {
 });
 
 // User Authentication & Management
-app.post('/api/login', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/login', async (req: express.Request, res: express.Response) => {
     try {
         const { username, password } = req.body;
         const user = await getUserByUsername(username);
@@ -72,7 +75,8 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.get('/api/users', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.get('/api/users', async (req: express.Request, res: express.Response) => {
     try {
         const users = await getAllUsers();
         res.json(users);
@@ -82,7 +86,8 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-app.post('/api/users', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/users', async (req: express.Request, res: express.Response) => {
     try {
         const newUser: Omit<User, 'id'> = req.body;
         const createdUser = await createUser(newUser);
@@ -93,7 +98,8 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
-app.put('/api/users/:id', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.put('/api/users/:id', async (req: express.Request, res: express.Response) => {
     try {
         const userId = parseInt(req.params.id, 10);
         const userUpdates: Partial<User> = req.body;
@@ -105,7 +111,8 @@ app.put('/api/users/:id', async (req, res) => {
     }
 });
 
-app.delete('/api/users/:id', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.delete('/api/users/:id', async (req: express.Request, res: express.Response) => {
     try {
         const userId = parseInt(req.params.id, 10);
         // A real app would get current user from a token, but for now we trust the client-side check.
@@ -120,7 +127,8 @@ app.delete('/api/users/:id', async (req, res) => {
 
 
 // Media Library (FTP)
-app.get('/api/media', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.get('/api/media', async (req: express.Request, res: express.Response) => {
     try {
         const directoryPath = (req.query.path as string) || '/';
         if (directoryPath.includes('..')) {
@@ -138,7 +146,8 @@ app.get('/api/media', async (req, res) => {
     }
 });
 
-app.post('/api/media/folder', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/media/folder', async (req: express.Request, res: express.Response) => {
     const { path } = req.body;
     if (!path || typeof path !== 'string') {
         return res.status(400).json({ message: 'Path is required.' });
@@ -155,7 +164,8 @@ app.post('/api/media/folder', async (req, res) => {
     }
 });
 
-app.delete('/api/media/folder', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.delete('/api/media/folder', async (req: express.Request, res: express.Response) => {
     try {
         const directoryPath = (req.query.path as string);
         if (!directoryPath || directoryPath === '/') {
@@ -172,7 +182,8 @@ app.delete('/api/media/folder', async (req, res) => {
     }
 });
 
-app.post('/api/media/upload', upload.single('file'), async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/media/upload', upload.single('file'), async (req: express.Request, res: express.Response) => {
     // The `file` property is added by multer. We cast to `any` for simplicity
     // or you could extend the Express.Request type.
     const file = req.file;
@@ -192,7 +203,8 @@ app.post('/api/media/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-app.delete('/api/media/:filename', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.delete('/api/media/:filename', async (req: express.Request, res: express.Response) => {
     try {
         const path = (req.query.path as string) || '/';
         if (path.includes('..')) {
@@ -208,7 +220,8 @@ app.delete('/api/media/:filename', async (req, res) => {
 
 
 // Contact Form (SMTP)
-app.post('/api/contact', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/contact', async (req: express.Request, res: express.Response) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message) {
         return res.status(400).json({ message: 'All fields are required.' });
@@ -223,7 +236,8 @@ app.post('/api/contact', async (req, res) => {
 });
 
 // Donation Notification
-app.post('/api/donate', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/donate', async (req: express.Request, res: express.Response) => {
     const { firstName, lastName, emailAddress, amount } = req.body;
     if (!firstName || !lastName || !emailAddress || amount === undefined) {
         return res.status(400).json({ message: 'All fields are required.' });
@@ -237,8 +251,19 @@ app.post('/api/donate', async (req, res) => {
     }
 });
 
+// Stripe Configuration Endpoint
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.get('/api/stripe-key', (req: express.Request, res: express.Response) => {
+    if (!config.stripe.publishableKey) {
+        console.error("Stripe publishable key is not set in the server environment variables.");
+        return res.status(500).json({ message: 'Stripe is not configured correctly on the server.' });
+    }
+    res.json({ publishableKey: config.stripe.publishableKey });
+});
+
 // Stripe Payment Intent
-app.post('/api/create-payment-intent', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/create-payment-intent', async (req: express.Request, res: express.Response) => {
     const { amount } = req.body;
     if (!amount || typeof amount !== 'number' || amount <= 0) {
         return res.status(400).json({ message: 'A valid amount is required.' });
@@ -262,12 +287,14 @@ app.post('/api/create-payment-intent', async (req, res) => {
 
 
 // Keepalive endpoint to prevent the server from sleeping
-app.get('/api/keepalive', (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.get('/api/keepalive', (req: express.Request, res: express.Response) => {
     res.status(200).json({ status: 'alive', timestamp: new Date() });
 });
 
 // Gemini AI Text Generation
-app.post('/api/generate-text', async (req, res) => {
+// FIX: Add explicit types for req and res to resolve type conflicts with DOM types.
+app.post('/api/generate-text', async (req: express.Request, res: express.Response) => {
     if (!ai) {
         return res.status(503).json({ message: "AI service is not configured on the server." });
     }
@@ -276,9 +303,9 @@ app.post('/api/generate-text', async (req, res) => {
     if (!prompt || !language) {
         return res.status(400).json({ message: "Prompt and language are required." });
     }
-    
+
     const languageName = language === 'es' ? 'Spanish' : 'English';
-    
+
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
@@ -297,5 +324,5 @@ app.post('/api/generate-text', async (req, res) => {
 
 // Start server
 app.listen(config.server.port, () => {
-  console.log(`Server running on http://localhost:${config.server.port}`);
+    console.log(`Server running on http://localhost:${config.server.port}`);
 });
