@@ -303,9 +303,9 @@ app.post('/api/generate-text', async (req: express.Request, res: express.Respons
     if (!prompt || !language) {
         return res.status(400).json({ message: "Prompt and language are required." });
     }
-
+    
     const languageName = language === 'es' ? 'Spanish' : 'English';
-
+    
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
@@ -324,5 +324,5 @@ app.post('/api/generate-text', async (req: express.Request, res: express.Respons
 
 // Start server
 app.listen(config.server.port, () => {
-    console.log(`Server running on http://localhost:${config.server.port}`);
+  console.log(`Server running on http://localhost:${config.server.port}`);
 });
