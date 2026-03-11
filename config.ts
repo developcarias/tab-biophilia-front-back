@@ -22,7 +22,7 @@ export const config = {
     secure: true,
     auth: {
       user: 'admin@biophiliaweb.org',
-      pass: 'Svs..6242'
+      pass: 'Said0307!..'
     }
   },
   stripe: {
